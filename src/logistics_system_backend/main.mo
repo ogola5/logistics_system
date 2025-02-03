@@ -1,3 +1,14 @@
+/* 
+Logistics System Canister - v1.0.0
+A decentralized logistics management system built on the Internet Computer blockchain
+
+Key Features:
+- Package lifecycle management
+- Warehouse capacity optimization
+- Driver route scheduling
+- Priority delivery system
+- Real-time delivery estimation
+*/
 import Array "mo:base/Array";
 import HashMap "mo:base/HashMap";
 import Nat "mo:base/Nat";
@@ -12,12 +23,16 @@ import Int "mo:base/Int";
 
 
 actor LogisticsSystem {
+  /// ======================
+  /// Type Definitions
+  /// ======================
   type PackageId = Nat;
   type WarehouseId = Nat;
   type DriverId = Nat;
   type RouteId = Nat;
 
   // ===== ENHANCED DATA STRUCTURES =====
+  /// Package entity with full delivery lifecycle tracking
   public type Package = {
     weight : Float;
     origin : Text;
@@ -29,13 +44,13 @@ actor LogisticsSystem {
     customerPhone : Text;
     createdTime : Int;
   };
-  
+  /// Warehouse entity with capacity management
   public type Warehouse = {
     location : Text;
     capacity : Nat;
     storedPackages : [PackageId];
   };
-
+  /// Driver entity with availability tracking
   public type Driver = {
     driverId : DriverId;
     completedRoutes : [RouteId];
@@ -70,7 +85,14 @@ actor LogisticsSystem {
 
   // =====  CORE FUNCTIONS =====
 
-  // 1. Add Warehouse with Capacity Checks
+  /// ======================
+  /// Warehouse Management
+  /// ======================
+
+  /// Creates new warehouse with specified capacity
+  /// @param location: Geographic location identifier
+  /// @param capacity: Maximum number of packages
+  /// @returns: New warehouse ID
   public shared func addWarehouse(location : Text, capacity : Nat) : async WarehouseId {
     let warehouseId = nextWarehouseId;
     warehouses.put(warehouseId, {
@@ -109,7 +131,14 @@ actor LogisticsSystem {
     }
   };
 
-  // 3. Register New Driver with Availability
+  /// ======================
+  /// Driver Management
+  /// ======================
+
+  /// Registers new driver with availability status
+  /// @param name: Driver full name
+  /// @param vehicleType: Vehicle classification
+  /// @returns: New driver ID
   public shared func registerDriver(
     name : Text,
     vehicleType : { #Truck; #Van; #Bike }
@@ -127,7 +156,15 @@ actor LogisticsSystem {
     driverId
   };
 
-  // 4. Create New Delivery Route with Distance
+  /// ======================
+  /// Route Optimization
+  /// ======================
+
+  /// Creates new delivery route with automated ETA calculation
+  /// @param origin: Starting location
+  /// @param destination: Target location
+  /// @param distanceKm: Route distance
+  /// @returns: New route ID
   public shared func createRoute(
     origin : Text,
     destination : Text,
@@ -159,7 +196,11 @@ actor LogisticsSystem {
     else baseDistance
   };
 
-  // 6. Prioritize Package for Express Delivery
+  /// ======================
+  /// Business Logic Extensions
+  /// ======================
+
+  /// Upgrades package to express priority
   public shared func prioritizePackage(packageId : PackageId) : async Result.Result<(), Text> {
     switch (packages.get(packageId)) {
       case (null) { #err("Package not found") };
@@ -262,7 +303,9 @@ actor LogisticsSystem {
     }
   };
 
-  // 10. Estimate Delivery Time with Priority Consideration
+  /// ======================
+  /// Analytics & Reporting
+  /// ======================
   public shared func estimateDeliveryTime(packageId : PackageId) : async Result.Result<Int, Text> {
     switch (packages.get(packageId)) {
       case (null) { #err("Package not found") };
@@ -298,7 +341,17 @@ actor LogisticsSystem {
       }
     }
   };
-  // 13. Create a New Package
+  /// ======================
+  /// Package Lifecycle
+  /// ======================
+
+  /// Creates new package with initial status
+  /// @param weight: Package weight in kilograms
+  /// @param origin: Starting location
+  /// @param destination: Target location
+  /// @param priority: Delivery priority level
+  /// @param customerPhone: Contact number
+  /// @returns: New package ID
   public shared func createPackage(
     weight : Float,
     origin : Text,
@@ -314,8 +367,8 @@ actor LogisticsSystem {
       destination = destination;
       status = status;
       priority = priority;
-      warehouseId = null; // Initially, no warehouse assigned
-      routeId = null; // Initially, no route assigned
+      warehouseId = null; 
+      routeId = null; 
       customerPhone = customerPhone;
       createdTime = Time.now();
     };
@@ -346,6 +399,9 @@ actor LogisticsSystem {
           }
         }
       ),
+      /// ======================
+      /// Query Methods
+      /// ======================
       func(pid) : { packageId : PackageId; deliveredTime : Int } {
         let pkg = switch (packages.get(pid)) {
           case (?p) p;
@@ -356,7 +412,9 @@ actor LogisticsSystem {
     )
 };
 
-  // ===== HELPER FUNCTIONS =====
+    /// ======================
+  /// Internal Helpers
+  /// ======================
   private func calculateEstimatedTime(distanceKm : Float) : Nat {
     // Assumes average speed of 60 km/h
     Int.abs(Float.toInt(distanceKm / 60.0 * 60.0)) // Convert hours to minutes and ensure positive
