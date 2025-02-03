@@ -5,15 +5,11 @@
       "type": "motoko"
     },
     "logistics_system_frontend": {
-      "dependencies": [
-        "logistics_system_backend"
-      ],
-      "source": [
-        "src/logistics_system_frontend/dist"
-      ],
-      "type": "assets",
-      "workspace": "logistics_system_frontend"
+      "dependencies": ["logistics_system_backend"],
+      "source": ["src/logistics_system_frontend/dist"],
+      "type": "assets"
     }
+    
   },
   "defaults": {
     "build": {
