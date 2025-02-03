@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "logistics_system_backend": {
+      "main": "src/logistics_system_backend/main.mo",
+      "type": "motoko"
+    },
+    "logistics_system_frontend": {
+      "dependencies": [
+        "logistics_system_backend"
+      ],
+      "source": [
+        "src/logistics_system_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "logistics_system_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
