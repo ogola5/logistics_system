@@ -1,5 +1,6 @@
 # Decentralized Logistics System
-![Logistics Architecture](./assests/logistics_system_architecture.png)
+![Logistics Architecture](./assets/logistics_system_architecture.png)
+
 [![Internet Computer](https://img.shields.io/badge/Blockchain-Internet_Computer-blue)](https://internetcomputer.org/)
 [![Motoko](https://img.shields.io/badge/Language-Motoko-purple)](https://sdk.dfinity.org/docs/language-guide/motoko.html)
 
